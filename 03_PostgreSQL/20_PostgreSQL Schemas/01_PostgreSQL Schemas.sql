@@ -1,0 +1,7 @@
+CREATE SCHEMA sales
+CREATE SCHEMA hr
+
+ALTER SCHEMA sales RENAME TO programming
+
+DROP SCHEMA programming
+

@@ -141,3 +141,116 @@ INSERT INTO right_products (product_id, product_name) VALUES
 (2,'Laptop'),
 (3,'Monitors'),
 (4,'Mics');
+
+
+--left join
+SELECT 
+*
+FROM left_products
+LEFT JOIN right_products USING (product_id)
+
+
+--list all the movies with directors name and movie name
+SELECT 
+	CONCAT(d.first_name, ' ', d.last_name) AS director_name,
+	m.movie_name
+FROM directors d
+LEFT JOIN movies m USING (director_id)
+
+
+--count total movies of all directors
+SELECT 
+	CONCAT(d.first_name, ' ', d.last_name) AS director_name,
+	COUNT(*) AS "total_movies"
+FROM directors d
+LEFT JOIN movies m USING (director_id)
+GROUP BY director_name
+ORDER  BY  COUNT(*) DESC;
+
+--get all the total_revenues done by each movie for each director
+SELECT
+	CONCAT(d.first_name, ' ', d.last_name) AS director_name,
+	SUM(r.revenues_domestic + r.revenues_international) AS total_revenue
+FROM directors d 
+RIGHT JOIN movies m USING (director_id)
+LEFT JOIN movies_revenues r USING (movie_id)
+GROUP BY director_name
+HAVING SUM (r.revenues_domestic + r.revenues_international) > 100
+ORDER BY 2 DESC NULLS LAST
+
+--FULL JOIN
+SELECT 
+*
+FROM left_products
+FULL JOIN right_products USING (product_id)
+
+SELECT
+	mv.movie_id,
+	mv.movie_name,
+	mv.director_id,
+	d.first_name
+FROM movies mv
+FULL JOIN directors d ON mv.director_id = d.director_id
+
+--can we connect more than two tables -yes
+SELECT * FROM movies
+FULL JOIN directors USING (director_id)
+FULL JOIN movies_revenues USING  (movie_id)
+
+--lets join movies, actor, director and revenues together
+SELECT  
+*
+FROM actors
+JOIN movies_actors USING (actor_id)
+JOIN movies USING (movie_id)
+JOIN directors USING (director_id)
+JOIN movies_revenues USING (movie_id)
+
+--let self join left_products table
+
+SELECT
+*
+FROM left_products t1
+INNER JOIN left_products t2 USING (product_id)
+
+--le tthe query hierarchical data like all directions and movies
+SELECT
+	m1.movie_name,
+	m2.director_id
+FROM movies m1
+INNER JOIN movies m2 USING (movie_id)
+ORDER BY m1.director_id, m2.director_id
+
+
+--CROSS JOIN 
+SELECT 
+*
+FROM left_products
+CROSS JOIN right_products
+
+SELECT 
+*
+FROM actors
+CROSS JOIN directors
+
+--NATURAL JOIN
+SELECT 
+*
+FROM left_products
+NATURAL LEFT JOIN right_products
+
+
+--NATURAL join movie and director table
+SELECT 
+*
+FROM movies
+NATURAL JOIN directors
+
+SELECT * FROM movies
+
+SELECT 
+*
+FROM movies
+NATURAL RIGHT JOIN directors
+
+
